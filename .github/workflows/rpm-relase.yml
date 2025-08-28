@@ -29,14 +29,14 @@ jobs:
       - name: Install build dependencies
         run: |
           GNUPGHOME=/root/.gnupg tdnf -y update
-          GNUPGHOME=/root/.gnupg tdnf -y install rpmdevtools gcc ca-certificates pkg-config openssl-dev kernel-headers
+          GNUPGHOME=/root/.gnupg tdnf -y install rpmdevtools gcc ca-certificates pkg-config openssl-devel kernel-headers binutils
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Prepare RPM build environment
         run: |
           rpmdev-setuptree
-          cp waagent-rs/rpm/*.spec ~/rpmbuild/SPECS/
+          cp rpm/*.spec ~/rpmbuild/SPECS/
           spectool -C ~/rpmbuild/SOURCES/ -g ~/rpmbuild/SPECS/waagent-rs.spec
       - name: Build RPM
         run: |
@@ -46,7 +46,6 @@ jobs:
         run: |
           RPM_PATH=$(find ~/rpmbuild/RPMS -name "*.rpm" | grep -v debuginfo | head -n 1)
           echo "rpm_path=$RPM_PATH" >> $GITHUB_OUTPUT
-
       - name: Upload RPM artifact
         uses: actions/upload-artifact@v4
         with:
@@ -69,3 +68,4 @@ jobs:
 
 #Change log
 #    Wed Aug 27 2025 Mitch Tenorio (mitenori@microsoft.com)
+#
